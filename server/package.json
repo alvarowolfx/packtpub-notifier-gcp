@@ -1,0 +1,30 @@
+{
+  "name": "packtpub-notifier",
+  "description": "Packtpub free learning book of the day notifier",
+  "version": "0.0.1",
+  "private": true,
+  "license": "Apache Version 2.0",
+  "author": "Alvaro Viebrantz",
+  "scripts": {
+    "start": "node index.js",
+    "monitor": "nodemon index.js",
+    "deploy": "gcloud app deploy"
+  },
+  "engines": {
+    "node": ">=7.6"
+  },
+  "dependencies": {
+    "@google-cloud/datastore": "^0.7.0",
+    "@google-cloud/pubsub": "^0.8.2",
+    "boom": "^4.0.0",
+    "cheerio": "^0.22.0",
+    "firebase": "^3.7.1",
+    "glob": "^7.1.0",
+    "grpc": "^1.1.2",
+    "hapi": "^15.0.0",
+    "hapi-swagger": "^7.7.0",
+    "inert": "^4.0.2",
+    "node-fetch": "^1.6.3",
+    "vision": "^4.1.0"
+  }
+}
