@@ -27,21 +27,33 @@ class BookService {
         return results;
     }
 
+    getSlug(book) {
+        let slug = book.link.split('/');
+        slug = slug[slug.length - 1];
+        return slug;
+    }
+
     async all() {
-        const query = datastore.createQuery(kind);
+        const query = datastore.createQuery(kind)
+            .order('date', { descending: true });
         let results = await datastore.runQuery(query);
         return results[0];
     }
 
+    async exists(slug) {
+        const bookKey = datastore.key([kind, slug]);
+        let results = await datastore.get(bookKey);
+        return !!results[0];
+    }
+
     async save(book) {
-        let slug = book.link.split('/');
-        slug = slug[slug.length - 1];
+        let slug = this.getSlug(book);
         book.slug = slug;
         const bookKey = datastore.key([kind, slug]);
 
-        let results = await datastore.get(bookKey);
+        let exists = await this.exists(slug);
         let bookEntity = {};
-        if (results.length === 1) {
+        if (exists) {
             // Merge
             bookEntity = {
                 key: bookKey,

@@ -1,5 +1,9 @@
 'use strict';
 
+if (process.env.NODE_ENV === 'production') {
+  require('@google/cloud-trace').start();
+}
+
 const Hapi = require('hapi');
 const Joi = require('joi');
 const Boom = require('boom');

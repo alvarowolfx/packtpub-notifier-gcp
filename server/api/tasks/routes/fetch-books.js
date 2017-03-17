@@ -14,20 +14,24 @@ module.exports = {
         tags: ['api'],
         handler: async (request, reply) => {
             try {
+                console.log('Running Fetch Books');
+
                 const crawler = new PackPubCrawler();
                 let books = await crawler.fetchBooksFromPacktPub();
                 const service = new BooksService();
 
-                console.log('OldBooks');
-                await books.oldBooks.forEach(async (book) => {
-                    console.log(book.link);
-                    await service.save(book);
-                });
-                console.log('CurrentBook');
-                await service.save(books.currentBook);
+                let slug = service.getSlug(books.currentBook);
+                let exists = await service.exists(slug);
+                if (!exists) {
+                    await service.save(books.currentBook);
+                    // TODO: Notify all
+                }
+                console.log('Success Fetch Books');
 
                 reply({ books });
+
             } catch (e) {
+                console.log('Error Fetch Books', e);
                 reply(Boom.badGateway('Xablau', e))
             }
         }

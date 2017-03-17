@@ -1,0 +1,5 @@
+cron:
+- description: fetch book every 30 mins
+  url: /api/tasks/fetch-books
+  schedule: every 30 mins
+  target: default
