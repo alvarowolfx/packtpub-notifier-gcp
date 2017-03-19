@@ -98,6 +98,14 @@ accept@2.x.x:
     boom "4.x.x"
     hoek "4.x.x"
 
+alexa-verifier@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/alexa-verifier/-/alexa-verifier-0.3.1.tgz#65821743bd3aa506c155327179c0ad608e04aedc"
+  dependencies:
+    node-forge "^0.6.48"
+    request "^2.67.0"
+    validator "^6.2.0"
+
 align-text@^0.1.1, align-text@^0.1.3:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/align-text/-/align-text-0.1.4.tgz#0cd90a561093f35d0a99256c22b7069433fad117"
@@ -1351,7 +1359,7 @@ node-fetch@^1.6.3:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-forge@^0.6.46:
+node-forge@^0.6.46, node-forge@^0.6.48:
   version "0.6.49"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.6.49.tgz#f1ee95d5d74623938fe19d698aa5a26d54d2f60f"
 
@@ -1598,7 +1606,7 @@ request@2.76.0:
     tough-cookie "~2.3.0"
     tunnel-agent "~0.4.1"
 
-request@^2.72.0, request@^2.79.0:
+request@^2.67.0, request@^2.72.0, request@^2.79.0:
   version "2.79.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
   dependencies:
@@ -1921,7 +1929,7 @@ uuid@^3.0.0, uuid@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
 
-validator@^6.0.0:
+validator@^6.0.0, validator@^6.2.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/validator/-/validator-6.3.0.tgz#47ce23ed8d4eaddfa9d4b8ef0071b6cf1078d7c8"
 

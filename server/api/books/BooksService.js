@@ -33,6 +33,14 @@ class BookService {
         return slug;
     }
 
+    async getLastBook() {
+        const query = datastore.createQuery(kind)
+            .order('date', { descending: true })
+            .limit(1);
+        let results = await datastore.runQuery(query);
+        return results[0][0];
+    }
+
     async all() {
         const query = datastore.createQuery(kind)
             .order('date', { descending: true });
