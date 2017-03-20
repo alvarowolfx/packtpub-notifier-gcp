@@ -8,8 +8,9 @@ skip_files:
 
 
 resources:
-  cpu: 0.5
-  memory_gb: 0.6
+  cpu: .2
+  memory_gb: .6
+  disk_size_gb: 10
 
 manual_scaling:
   instances: 1

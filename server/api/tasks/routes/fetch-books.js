@@ -4,6 +4,7 @@ const Boom = require('boom');
 
 const PackPubCrawler = require('../PacktPubCrawler');
 const BooksService = require('../../books/BooksService');
+const BookNotificationService = require('../../books/BookNotificationService');
 
 module.exports = {
     method: 'GET',
@@ -23,8 +24,12 @@ module.exports = {
                 let slug = service.getSlug(books.currentBook);
                 let exists = await service.exists(slug);
                 if (!exists) {
+                    // Save new book
                     await service.save(books.currentBook);
-                    // TODO: Notify all
+
+                    // Notify clients that subscribed to this 
+                    let notificationService = new BookNotificationService();
+                    await notificationService.notifyAllClients(books.currentBook);
                 }
                 console.log('Success Fetch Books');
 
