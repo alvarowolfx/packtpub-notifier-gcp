@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppState, StatusBar, AsyncStorage, StyleSheet, Image, View, Linking } from 'react-native';
+import { AppState, StatusBar, Platform, AsyncStorage, StyleSheet, Image, View, Linking } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Firestack from 'react-native-firestack';
 import FCM from 'react-native-fcm';
@@ -36,7 +36,7 @@ export default class App extends React.Component {
       this.fetchBooks();
     }
 
-    firestack.analytics.logEventWithName("launch");
+    firestack.analytics.logEventWithName("launch", {});
   }
 
   async componentDidUpdate() {
@@ -52,7 +52,7 @@ export default class App extends React.Component {
   handleStateChange = (appState) => {
     if (appState === 'active') {
       this.fetchBooks();
-      firestack.analytics.logEventWithName("reopen");
+      firestack.analytics.logEventWithName("reopen", {});
     }
   }
 
@@ -139,10 +139,10 @@ export default class App extends React.Component {
       if (!wantsToReceiveNotifications) {
         FCM.requestPermissions();
         FCM.subscribeToTopic(TOPIC_NAME);
-        firestack.analytics.logEventWithName('subscribe');
+        firestack.analytics.logEventWithName('subscribe', {});
       } else {
         FCM.unsubscribeFromTopic(TOPIC_NAME);
-        firestack.analytics.logEventWithName('unsubscribe');
+        firestack.analytics.logEventWithName('unsubscribe', {});
       }
       this.setState({ wantsToReceiveNotifications: !wantsToReceiveNotifications })
     };
@@ -159,7 +159,7 @@ export default class App extends React.Component {
 
   renderNextButton() {
     const next = (state) => {
-      firestack.analytics.logEventWithName("nextbook");
+      firestack.analytics.logEventWithName("nextbook", {});
       return {
         currentBookIndex: state.currentBookIndex + 1
       };
@@ -173,7 +173,7 @@ export default class App extends React.Component {
 
   renderPrevButton() {
     const prev = (state) => {
-      firestack.analytics.logEventWithName("prevbook");
+      firestack.analytics.logEventWithName("prevbook", {});
       return {
         currentBookIndex: state.currentBookIndex - 1
       };
@@ -207,15 +207,33 @@ export default class App extends React.Component {
     return this.renderBook(currentBook, currentBookIndex === 0);
   }
 
+  renderBackground(img) {
+    if (Platform.OS === 'ios') {
+      return (
+        <Image source={{ uri: img }}
+          blurRadius={8}
+          style={StyleSheet.absoluteFill} />
+      )
+    }
+    let backgroundColor = 'rgba(0,0,0,0.4)';
+    return (
+      <View style={StyleSheet.absoluteFill}>
+        <Image source={{ uri: img }}
+          style={StyleSheet.absoluteFill} />
+        <View style={[StyleSheet.absoluteFill,
+        { backgroundColor }]} />
+      </View>
+    )
+
+  }
+
   render() {
     let { books, currentBookIndex } = this.state;
     let currentBook = books[currentBookIndex];
     let loaded = !!currentBook;
     return (
       <View style={styles.container}>
-        {loaded && <Image source={{ uri: currentBook.img }}
-          blurRadius={8}
-          style={StyleSheet.absoluteFill} />}
+        {loaded && this.renderBackground(currentBook.img)}
 
         <View style={{ flex: 1, padding: 8, paddingTop: 60, backgroundColor: 'transparent' }}>
           {this.renderContent()}

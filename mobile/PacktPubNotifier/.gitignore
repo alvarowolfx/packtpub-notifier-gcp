@@ -4,3 +4,10 @@ npm-debug.*
 ios/GoogleService-info.plist
 ios/Pods/*
 ios/build/*
+android/.gradle
+android/.idea
+android/app/build/*
+android/build/*
+keystore.jks
+*.apk
+android/app/google-services.json
