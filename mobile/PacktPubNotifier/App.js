@@ -264,7 +264,7 @@ const styles = {
   },
   cardImg: {
     flex: 1,
-    minHeight: 180,
+    minHeight: 80,
     maxHeight: 280,
     resizeMode: 'contain'
   },

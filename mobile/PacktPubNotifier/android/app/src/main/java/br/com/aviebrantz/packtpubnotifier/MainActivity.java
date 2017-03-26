@@ -1,4 +1,4 @@
-package com.packtpubnotifier;
+package br.com.aviebrantz.packtpubnotifier;
 
 import com.facebook.react.ReactActivity;
 
