@@ -5,6 +5,7 @@ import Firestack from 'react-native-firestack';
 import FCM from 'react-native-fcm';
 import { Spinner, Button, Icon, Text, Card, CardItem } from 'native-base';
 
+const API_URL = 'https://us-central1-iot-bootcamp-158521.cloudfunctions.net/books';
 const STORAGE_KEY = 'PACKT_PUB_NOTIFIER_STATE_KEY';
 const TOPIC_NAME = 'receive_book_notification'
 
@@ -59,7 +60,7 @@ export default class App extends React.Component {
   async fetchBooks() {
     try {
       StatusBar.setNetworkActivityIndicatorVisible(true);
-      let res = await fetch('https://iot-bootcamp-158521.appspot.com/api/books');
+      let res = await fetch(API_URL);
       let json = await res.json();
       let currentBookIndex = this.state.currentBookIndex;
       if (this.state.books.length !== json.books.length) {
