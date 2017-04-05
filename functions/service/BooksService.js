@@ -70,7 +70,7 @@ class BookService {
         let slug = this.getSlug(book);
         book.slug = slug;
         const bookKey = datastore.key([kind, slug]);
-        bookEntity = {
+        let bookEntity = {
             key: bookKey,
             data: book
         };

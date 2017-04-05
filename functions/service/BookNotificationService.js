@@ -12,7 +12,8 @@ class BookNotificationService {
             notification: {
                 title: `${book.title} is free today!`,
                 body: `Open the app to claim this book.`,
-                icon: 'ic_stat'
+                icon: 'ic_stat',
+                color: '#e9662e'
             }
         };
         return messaging.sendToTopic(TOPIC_NAME, payload);

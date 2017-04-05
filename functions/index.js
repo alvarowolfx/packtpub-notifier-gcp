@@ -6,7 +6,7 @@ admin.initializeApp(functions.config().firebase);
 
 const BooksService = require('./service/BooksService');
 const BookNotificationService = require('./service/BookNotificationService')
-//const alexaVerifier = require('alexa-verifier');
+const alexaVerifier = require('alexa-verifier');
 const PacktPubCrawler = require('./service/PacktPubCrawler');
 
 exports.books = functions.https.onRequest((req, res) => {
@@ -17,22 +17,36 @@ exports.books = functions.https.onRequest((req, res) => {
 });
 
 exports.alexa = functions.https.onRequest((req, res) => {
-    const service = new BooksService();
-    service.getLastBook()
-        .then(book => {
-            let message = `The free book of the day is titled ${book.title}`;
-            res.json({
-                "version": "1.0",
-                "sessionAttributes": {},
-                "response": {
-                    "shouldEndSession": true,
-                    "outputSpeech": {
-                        "type": "SSML",
-                        "ssml": `<speak>${message}</speak>`
-                    },
-                }
-            });
-        });
+    let certUrl = req.headers.signaturecertchainurl;
+    let signature = req.headers.signature;
+    let body = JSON.stringify(req.body);
+    alexaVerifier(
+        certUrl,
+        signature,
+        body,
+        function verificationCallback(err) {
+            if (err) {
+                res.json({ error: err })
+            } else {
+                const service = new BooksService();
+                service.getLastBook()
+                    .then(book => {
+                        let message = `The free book of the day is titled ${book.title}`;
+                        res.json({
+                            "version": "1.0",
+                            "sessionAttributes": {},
+                            "response": {
+                                "shouldEndSession": true,
+                                "outputSpeech": {
+                                    "type": "SSML",
+                                    "ssml": `<speak>${message}</speak>`
+                                },
+                            }
+                        });
+                    });
+            }
+        }
+    );
 });
 
 exports.fetch_books = functions.https.onRequest((req, res) => {
