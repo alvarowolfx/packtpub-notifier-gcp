@@ -41,7 +41,7 @@ class PackPubCrawler {
 
 		let img = '';
 		let link = '';
-		let claimLink = ''
+		let claimLink = 'https://www.packtpub.com/packt/offers/free-learning'
 		let imgElements = documentSelector('div.dotd-main-book-image img');
 		if (imgElements.length > 0) {
 			img = this.fixImgLink(imgElements.attr('src'));
@@ -51,10 +51,13 @@ class PackPubCrawler {
 				link = this.fixRelativeLink(linkElements.attr('href'));
 			}
 
+			/*
+			BLOCKED BY THE Website
 			let claimLinkElements = documentSelector('a.twelve-days-claim');
 			if (claimLinkElements.length > 0) {
 				claimLink = this.fixRelativeLink(claimLinkElements.attr('href'));
 			}
+			*/
 		}
 
 		return {

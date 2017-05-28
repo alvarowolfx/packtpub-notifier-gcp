@@ -17,16 +17,38 @@ exports.books = functions.https.onRequest((req, res) => {
 });
 
 exports.alexa = functions.https.onRequest((req, res) => {
+
+    if (req.method !== 'POST') {
+        res.status(403).send({ error: 'Invalid request' });
+        return;
+    }
+
     let certUrl = req.headers.signaturecertchainurl;
     let signature = req.headers.signature;
-    let body = JSON.stringify(req.body);
+    let body = req.body;
+    let contentType = req.get('content-type').split(';')[0];
+    switch (contentType) {
+        // '{"name":"John"}'
+        case 'application/x-www-form-urlencoded':
+        case 'text/plain':
+        case 'application/json':
+            body = JSON.stringify(body);
+            break;
+        case 'application/octet-stream':
+            break;
+    }
+    console.log(contentType);
+    console.log(body);
+    console.log(certUrl);
+    console.log(signature);
     alexaVerifier(
         certUrl,
         signature,
         body,
         function verificationCallback(err) {
             if (err) {
-                res.json({ error: err })
+                console.error(err)
+                res.status(403).send(err)
             } else {
                 const service = new BooksService();
                 service.getLastBook()
@@ -67,7 +89,7 @@ exports.fetch_books = functions.https.onRequest((req, res) => {
                 // Save new book
                 return service.save(books.currentBook)
                     .then(() => {
-                        // Notify clients that subscribed to this 
+                        // Notify clients that subscribed to this
                         console.log('Notify all');
                         let notificationService = new BookNotificationService();
                         return notificationService.notifyAllClients(books.currentBook);
@@ -84,4 +106,3 @@ exports.fetch_books = functions.https.onRequest((req, res) => {
         });
 
 });
-
