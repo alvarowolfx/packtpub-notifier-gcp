@@ -2,11 +2,11 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
 admin.initializeApp(functions.config().firebase);
 
 const BooksService = require('./service/BooksService');
 const BookNotificationService = require('./service/BookNotificationService')
-const alexaVerifier = require('alexa-verifier');
 const PacktPubCrawler = require('./service/PacktPubCrawler');
 
 exports.books = functions.https.onRequest((req, res) => {
@@ -16,59 +16,28 @@ exports.books = functions.https.onRequest((req, res) => {
     });
 });
 
-exports.alexa = functions.https.onRequest((req, res) => {
+exports.googleassistant = functions.https.onRequest((req, res) => {
+    const app = new ActionsSdkApp({request: req, response: res});    
+    const service = new BooksService();
+    const hasScreen = app.hasSurfaceCapability(app.SurfaceCapabilities.SCREEN_OUTPUT);
+    service.getLastBook()
+        .then(book => {
+            let message = `The free book of the day is titled ${book.title}`;
+            if(hasScreen){
+                let richMessage = app.buildRichResponse()
+                    .addSimpleResponse(message)
+                    .addBasicCard(
+                        app.buildBasicCard(book.description)
+                            .setTitle(book.title)
+                            .addButton('Claim book', book.claimLink)
+                            .setImage(book.img, 'Book image')
+                    );
 
-    if (req.method !== 'POST') {
-        res.status(403).send({ error: 'Invalid request' });
-        return;
-    }
-
-    let certUrl = req.headers.signaturecertchainurl;
-    let signature = req.headers.signature;
-    let body = req.body;
-    let contentType = req.get('content-type').split(';')[0];
-    switch (contentType) {
-        // '{"name":"John"}'
-        case 'application/x-www-form-urlencoded':
-        case 'text/plain':
-        case 'application/json':
-            body = JSON.stringify(body);
-            break;
-        case 'application/octet-stream':
-            break;
-    }
-    console.log(contentType);
-    console.log(body);
-    console.log(certUrl);
-    console.log(signature);
-    alexaVerifier(
-        certUrl,
-        signature,
-        body,
-        function verificationCallback(err) {
-            if (err) {
-                console.error(err)
-                res.status(403).send(err)
-            } else {
-                const service = new BooksService();
-                service.getLastBook()
-                    .then(book => {
-                        let message = `The free book of the day is titled ${book.title}`;
-                        res.json({
-                            "version": "1.0",
-                            "sessionAttributes": {},
-                            "response": {
-                                "shouldEndSession": true,
-                                "outputSpeech": {
-                                    "type": "SSML",
-                                    "ssml": `<speak>${message}</speak>`
-                                },
-                            }
-                        });
-                    });
+                app.tell(richMessage);                
+            }else{
+                app.tell(message);
             }
-        }
-    );
+        });
 });
 
 exports.fetch_books = functions.https.onRequest((req, res) => {

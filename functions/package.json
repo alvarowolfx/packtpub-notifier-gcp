@@ -3,6 +3,7 @@
   "description": "Cloud Functions for Firebase",
   "dependencies": {
     "@google-cloud/datastore": "^0.7.1",
+    "actions-on-google": "^1.1.1",
     "alexa-verifier": "^0.3.1",
     "cheerio": "^0.22.0",
     "firebase-admin": "^4.1.2",

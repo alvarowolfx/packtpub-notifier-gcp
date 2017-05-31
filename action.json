@@ -1,0 +1,41 @@
+{
+	"actions": [
+      {        
+        "name": "MAIN",
+        "fulfillment": {
+          "conversationName": "packtPubFan"
+        },
+        "intent": {
+          "name": "actions.intent.MAIN",          
+          "trigger": {
+            "query_patterns": [
+                "talk to Free book of the day"
+            ]
+          }
+        }
+      },
+      {
+        "name": "FREE_BOOK_OF_THE_DAY",
+        "fulfillment": {
+          "conversationName": "packtPubFan"
+        },
+        "intent": {
+          "name": "br.com.aviebrantz.FREE_BOOK_OF_THE_DAY",
+          "trigger": {
+            "queryPatterns": [
+               "what's the book of the day",
+               "what's free today",
+               "get the book of the day"
+            ]
+          }      
+        } 
+      }
+    ],
+    "conversations": {
+      "packtPubFan": {
+        "name": "packtPubFan",
+        "url": "https://us-central1-iot-bootcamp-158521.cloudfunctions.net/googleassistant"
+      }
+    }
+
+}
