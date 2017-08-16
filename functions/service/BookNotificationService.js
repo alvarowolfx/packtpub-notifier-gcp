@@ -5,7 +5,8 @@ const messaging = admin.messaging();
 const fetch = require('node-fetch');
 const TOPIC_NAME = 'receive_book_notification';
 
-const slackWebhook = '[your-slack-url-here]';
+const slackWebhook =
+  'https://hooks.slack.com/services/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';
 
 class BookNotificationService {
   notifyAllClients(book) {

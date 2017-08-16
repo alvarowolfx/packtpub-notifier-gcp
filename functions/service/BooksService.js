@@ -1,6 +1,7 @@
 'use strict';
 
 const Datastore = require('@google-cloud/datastore');
+const moment = require('moment');
 
 // Instantiates a client
 const datastore = Datastore({
@@ -54,12 +55,13 @@ class BookService {
   exists(slug) {
     const bookKey = datastore.key([kind, slug]);
     return datastore.get(bookKey).then(results => {
-      let result = results[0];
-      if (result.length === 1) {
-        let book = result[0];
+      console.log('Exists', results);
+      if (results.length === 1) {
+        let book = results[0];
         let now = moment();
         let lastBookDay = moment(book['date']);
         let isMoreThanTwoDays = now.diff(lastBookDay, 'd') > 2;
+        console.log('Exists', book, now, lastBookDay, isMoreThanTwoDays);
         return !isMoreThanTwoDays;
       }
       return false;
