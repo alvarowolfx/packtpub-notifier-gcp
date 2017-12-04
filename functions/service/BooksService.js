@@ -56,7 +56,8 @@ class BookService {
     const bookKey = datastore.key([kind, slug]);
     return datastore.get(bookKey).then(results => {
       console.log('Exists', results);
-      if (results.length === 1) {
+      let book = results[0];
+      if (book) {
         let book = results[0];
         let now = moment();
         let lastBookDay = moment(book['date']);

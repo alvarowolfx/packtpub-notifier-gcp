@@ -2,7 +2,8 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const ActionsSdkApp = require('actions-on-google').ActionsSdkApp;
+const DialogflowApp = require('actions-on-google').DialogflowApp;
+const i18n = require('@manekinekko/actions-on-google-i18n');
 admin.initializeApp(functions.config().firebase);
 
 const BooksService = require('./service/BooksService');
@@ -16,14 +17,14 @@ exports.books = functions.https.onRequest((req, res) => {
   });
 });
 
-exports.googleassistant = functions.https.onRequest((req, res) => {
-  const app = new ActionsSdkApp({ request: req, response: res });
+function bookTodayHandler(app) {
   const service = new BooksService();
   const hasScreen = app.hasSurfaceCapability(
     app.SurfaceCapabilities.SCREEN_OUTPUT
   );
+
   service.getLastBook().then(book => {
-    let message = `The free book of the day is titled ${book.title}`;
+    let message = app.__('BOOK_DAY', { title: book.title });
     if (hasScreen) {
       let richMessage = app
         .buildRichResponse()
@@ -32,8 +33,8 @@ exports.googleassistant = functions.https.onRequest((req, res) => {
           app
             .buildBasicCard(book.description)
             .setTitle(book.title)
-            .addButton('Claim book', book.claimLink)
-            .setImage(book.img, 'Book image')
+            .addButton(app.__('CLAIM_BOOK'), book.claimLink)
+            .setImage(book.img, app.__('IMAGE_DESC'))
         );
 
       app.tell(richMessage);
@@ -41,6 +42,25 @@ exports.googleassistant = functions.https.onRequest((req, res) => {
       app.tell(message);
     }
   });
+}
+
+exports.googleassistant = functions.https.onRequest((req, res) => {
+  const app = new DialogflowApp({ request: req, response: res });
+
+  i18n
+    .configure({
+      directory: `${__dirname}/locales`,
+      defaultLocale: 'en-US',
+      defaultExtension: 'json'
+    })
+    .use(app);
+
+  const actionMap = new Map();
+  actionMap.set('input.welcome', bookTodayHandler);
+  actionMap.set('free_book', bookTodayHandler);
+  actionMap.set('null', bookTodayHandler);
+
+  app.handleRequest(actionMap);
 });
 
 exports.notify_slack = functions.https.onRequest((req, res) => {

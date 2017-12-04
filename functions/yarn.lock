@@ -57,6 +57,12 @@
     propprop "^0.3.0"
     split-array-stream "^1.0.0"
 
+"@manekinekko/actions-on-google-i18n@^1.3.5":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@manekinekko/actions-on-google-i18n/-/actions-on-google-i18n-1.3.5.tgz#879e109e0a808aa1816a644566c64010b8d5d8c9"
+  dependencies:
+    app-root-dir "^1.0.2"
+
 "@types/express-serve-static-core@*":
   version "4.0.44"
   resolved "https://registry.yarnpkg.com/@types/express-serve-static-core/-/express-serve-static-core-4.0.44.tgz#a1c3bd5d80e93c72fba91a03f5412c47f21d4ae7"
@@ -142,6 +148,10 @@ ansi-regex@^2.0.0:
 ansi-styles@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-2.2.1.tgz#b432dd3358b634cf75e1e4664368240533c1ddbe"
+
+app-root-dir@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/app-root-dir/-/app-root-dir-1.0.2.tgz#38187ec2dea7577fff033ffcb12172692ff6e118"
 
 aproba@^1.0.3:
   version "1.1.1"
